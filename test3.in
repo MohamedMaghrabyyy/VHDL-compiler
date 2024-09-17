@@ -1,0 +1,9 @@
+ENTITY ent IS
+END;
+
+ARCHITECTURE arch OF ent IS
+	SIGNAL s11 : t1;
+BEGIN
+	s11 <= s_unkown1;
+	s_unkown2 <= s11;
+END;
