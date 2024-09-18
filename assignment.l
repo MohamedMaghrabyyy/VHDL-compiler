@@ -4,10 +4,10 @@
 #include <string.h>
 
 void yyerror(const char *s);
-int yylineno;  // To track the current line number in Flex
+int yylineno; 
 
-// Convert a string to lowercase
-void to_lowercase(char *str) {
+void to_lowercase(char *str) 
+{
     for (char *p = str; *p; ++p) *p = tolower(*p);
 }
 %}
@@ -26,7 +26,7 @@ void to_lowercase(char *str) {
     char temp[256];
     // Copy the identifier and convert to lowercase
     strncpy(temp, yytext, sizeof(temp));
-    temp[sizeof(temp) - 1] = '\0';  // Ensure null termination
+    temp[sizeof(temp) - 1] = '\0'; 
     char *original_text = strdup(yytext);
     to_lowercase(temp);
     // Check if it's a keyword by comparing with lowercase keywords
@@ -67,9 +67,9 @@ void to_lowercase(char *str) {
 ";"                    { return SEMICOLON; }
 ":"                    { return COLON; }
 
-.                      { 
-    char error_msg[100];
-    snprintf(error_msg, sizeof(error_msg), "unexpected character '%s'", yytext);
+. {
+    char error_msg[256];
+    snprintf(error_msg, sizeof(error_msg), "Invalid identifier: '%s', contains or starts with invalid characters", yytext);
     yyerror(error_msg);
 }
 
