@@ -28,7 +28,7 @@ int signal_type_matches(char *source, char *destination);
 
 %union { char *id; }
 
-%token <id> ENTITY IS END ARCHITECTURE SIGNAL IDENTIFIER NUMBER OF COLON SEMICOLON BEGIN_TOK
+%token <id> ENTITY IDENTIFIER IS END ARCHITECTURE SIGNAL NUMBER OF COLON SEMICOLON BEGIN_TOK
 %token <id> ASSIGN
 
 %type <id> program entity_decl architecture_decl signal_decl assignment
@@ -52,7 +52,7 @@ entity_decl:
     ;
 
 architecture_decl:
-    ARCHITECTURE IDENTIFIER OF IDENTIFIER IS signal_decl BEGIN_TOK assignment END SEMICOLON
+    ARCHITECTURE IDENTIFIER OF IDENTIFIER IS signal_decl_list BEGIN_TOK assignment_list END SEMICOLON
     {
         if (entity_name == NULL) 
         {
@@ -75,6 +75,13 @@ architecture_decl:
     }
     ;
 
+signal_decl_list:
+    /* Empty */
+    |
+    signal_decl
+    | signal_decl_list signal_decl
+    ;
+
 signal_decl:
     SIGNAL IDENTIFIER COLON IDENTIFIER SEMICOLON
     {
@@ -83,13 +90,13 @@ signal_decl:
         free($2);
         free($4);
     }
-    | signal_decl SIGNAL IDENTIFIER COLON IDENTIFIER SEMICOLON
-    {
-        add_signal($3, $5);
-        printf("Signal declaration: %s of type %s\n", $3, $5);
-        free($3);
-        free($5);
-    }
+    ;
+
+assignment_list:
+    /* Empty */
+    |
+    assignment
+    | assignment_list assignment
     ;
 
 assignment:

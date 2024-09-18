@@ -760,37 +760,37 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 17 "assignment.l"
-{ yylval.id = strdup("entity"); return ENTITY; }
+{ return ENTITY; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 18 "assignment.l"
-{ yylval.id = strdup("is"); return IS; }
+{ return IS; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 19 "assignment.l"
-{ yylval.id = strdup("end"); return END; }
+{ return END; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 20 "assignment.l"
-{ yylval.id = strdup("architecture"); return ARCHITECTURE; }
+{ return ARCHITECTURE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 21 "assignment.l"
-{ yylval.id = strdup("signal"); return SIGNAL; }
+{ return SIGNAL; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 22 "assignment.l"
-{ yylval.id = strdup("of"); return OF; }
+{ return OF; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 23 "assignment.l"
-{ yylval.id = strdup("begin"); return BEGIN_TOK; }
+{ return BEGIN_TOK; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP

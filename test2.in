@@ -1,6 +1,6 @@
 entity abc is
 end;
 
-architecture arch of xyz is
+architecture arch of abc1 is
 begin
 end;

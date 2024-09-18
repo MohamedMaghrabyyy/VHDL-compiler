@@ -140,11 +140,11 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     ENTITY = 258,                  /* ENTITY  */
-    IS = 259,                      /* IS  */
-    END = 260,                     /* END  */
-    ARCHITECTURE = 261,            /* ARCHITECTURE  */
-    SIGNAL = 262,                  /* SIGNAL  */
-    IDENTIFIER = 263,              /* IDENTIFIER  */
+    IDENTIFIER = 259,              /* IDENTIFIER  */
+    IS = 260,                      /* IS  */
+    END = 261,                     /* END  */
+    ARCHITECTURE = 262,            /* ARCHITECTURE  */
+    SIGNAL = 263,                  /* SIGNAL  */
     NUMBER = 264,                  /* NUMBER  */
     OF = 265,                      /* OF  */
     COLON = 266,                   /* COLON  */
@@ -160,11 +160,11 @@ extern int yydebug;
 #define YYerror 256
 #define YYUNDEF 257
 #define ENTITY 258
-#define IS 259
-#define END 260
-#define ARCHITECTURE 261
-#define SIGNAL 262
-#define IDENTIFIER 263
+#define IDENTIFIER 259
+#define IS 260
+#define END 261
+#define ARCHITECTURE 262
+#define SIGNAL 263
 #define NUMBER 264
 #define OF 265
 #define COLON 266
@@ -203,11 +203,11 @@ enum yysymbol_kind_t
   YYSYMBOL_YYerror = 1,                    /* error  */
   YYSYMBOL_YYUNDEF = 2,                    /* "invalid token"  */
   YYSYMBOL_ENTITY = 3,                     /* ENTITY  */
-  YYSYMBOL_IS = 4,                         /* IS  */
-  YYSYMBOL_END = 5,                        /* END  */
-  YYSYMBOL_ARCHITECTURE = 6,               /* ARCHITECTURE  */
-  YYSYMBOL_SIGNAL = 7,                     /* SIGNAL  */
-  YYSYMBOL_IDENTIFIER = 8,                 /* IDENTIFIER  */
+  YYSYMBOL_IDENTIFIER = 4,                 /* IDENTIFIER  */
+  YYSYMBOL_IS = 5,                         /* IS  */
+  YYSYMBOL_END = 6,                        /* END  */
+  YYSYMBOL_ARCHITECTURE = 7,               /* ARCHITECTURE  */
+  YYSYMBOL_SIGNAL = 8,                     /* SIGNAL  */
   YYSYMBOL_NUMBER = 9,                     /* NUMBER  */
   YYSYMBOL_OF = 10,                        /* OF  */
   YYSYMBOL_COLON = 11,                     /* COLON  */
@@ -218,8 +218,10 @@ enum yysymbol_kind_t
   YYSYMBOL_program = 16,                   /* program  */
   YYSYMBOL_entity_decl = 17,               /* entity_decl  */
   YYSYMBOL_architecture_decl = 18,         /* architecture_decl  */
-  YYSYMBOL_signal_decl = 19,               /* signal_decl  */
-  YYSYMBOL_assignment = 20                 /* assignment  */
+  YYSYMBOL_signal_decl_list = 19,          /* signal_decl_list  */
+  YYSYMBOL_signal_decl = 20,               /* signal_decl  */
+  YYSYMBOL_assignment_list = 21,           /* assignment_list  */
+  YYSYMBOL_assignment = 22                 /* assignment  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -547,16 +549,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  5
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   36
+#define YYLAST   35
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  15
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  6
+#define YYNNTS  8
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  8
+#define YYNRULES  13
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  38
+#define YYNSTATES  37
 
 /* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   269
@@ -604,9 +606,10 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int8 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
-       0,    39,    39,    43,    55,    79,    86,    96,   121
+       0,    39,    39,    43,    55,    78,    81,    82,    86,    95,
+      98,    99,   103,   128
 };
 #endif
 
@@ -622,10 +625,11 @@ static const char *yysymbol_name (yysymbol_kind_t yysymbol) YY_ATTRIBUTE_UNUSED;
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "\"end of file\"", "error", "\"invalid token\"", "ENTITY", "IS", "END",
-  "ARCHITECTURE", "SIGNAL", "IDENTIFIER", "NUMBER", "OF", "COLON",
+  "\"end of file\"", "error", "\"invalid token\"", "ENTITY", "IDENTIFIER",
+  "IS", "END", "ARCHITECTURE", "SIGNAL", "NUMBER", "OF", "COLON",
   "SEMICOLON", "BEGIN_TOK", "ASSIGN", "$accept", "program", "entity_decl",
-  "architecture_decl", "signal_decl", "assignment", YY_NULLPTR
+  "architecture_decl", "signal_decl_list", "signal_decl",
+  "assignment_list", "assignment", YY_NULLPTR
 };
 
 static const char *
@@ -635,7 +639,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-8)
+#define YYPACT_NINF (-9)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -649,10 +653,10 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      -1,    -5,     5,     1,     4,    -8,     2,    -8,     6,     3,
-      -3,     7,    -8,     8,     9,    10,    -7,    11,    12,    13,
-      15,    14,     0,    -4,    16,    18,    19,    17,    20,    -8,
-      21,    23,    -8,    22,    -8,    -8,    24,    -8
+      -1,     0,     6,     1,     2,    -9,     5,    -9,     4,     3,
+       7,     8,    -9,     9,    10,    11,    -8,    -9,    12,    13,
+      -9,    16,    14,    -3,    17,    15,    18,    19,    17,    20,
+      -9,    21,    -9,    22,    -9,    23,    -9
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -661,21 +665,21 @@ static const yytype_int8 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     0,     0,     1,     0,     2,     0,     0,
-       0,     0,     3,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,     0,     5,
-       0,     0,     4,     0,     6,     7,     0,     8
+       0,     0,     3,     0,     5,     0,     0,     6,     0,     9,
+       7,     0,     0,     0,    10,     0,     0,     0,    11,     0,
+       8,     0,     4,     0,    12,     0,    13
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -8,    -8,    -8,    -8,    -8,    -8
+      -9,    -9,    -9,    -9,    -9,    -5,    -9,    -7
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-       0,     2,     3,     7,    16,    23
+       0,     2,     3,     7,    16,    17,    23,    24
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -683,40 +687,42 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-      18,    27,     1,     4,    28,     5,    19,     6,     8,    12,
-       9,    10,    14,    11,    26,    13,    15,     0,    17,     0,
-      21,    22,    20,    24,     0,    25,    30,    31,    29,    32,
-      36,     0,     0,    34,    33,    35,    37
+      15,    22,     1,    27,     4,    19,     5,     8,     6,     9,
+      10,    20,    13,    11,    14,    18,    28,    22,    15,    12,
+      25,    29,    31,    21,     0,     0,    35,    30,    26,     0,
+       0,    32,     0,    34,    33,    36
 };
 
 static const yytype_int8 yycheck[] =
 {
-       7,     5,     3,     8,     8,     0,    13,     6,     4,    12,
-       8,     5,     4,    10,    14,     8,     7,    -1,     8,    -1,
-       8,     8,    11,     8,    -1,    11,     8,     8,    12,    12,
-       8,    -1,    -1,    12,    14,    12,    12
+       8,     4,     3,     6,     4,    13,     0,     5,     7,     4,
+       6,    16,     4,    10,     5,     4,    23,     4,     8,    12,
+       4,     4,     4,    11,    -1,    -1,     4,    12,    14,    -1,
+      -1,    12,    -1,    12,    14,    12
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,    16,    17,     8,     0,     6,    18,     4,     8,
-       5,    10,    12,     8,     4,     7,    19,     8,     7,    13,
-      11,     8,     8,    20,     8,    11,    14,     5,     8,    12,
-       8,     8,    12,    14,    12,    12,     8,    12
+       0,     3,    16,    17,     4,     0,     7,    18,     5,     4,
+       6,    10,    12,     4,     5,     8,    19,    20,     4,    13,
+      20,    11,     4,    21,    22,     4,    14,     6,    22,     4,
+      12,     4,    12,    14,    12,     4,    12
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    15,    16,    17,    18,    19,    19,    20,    20
+       0,    15,    16,    17,    18,    19,    19,    19,    20,    21,
+      21,    21,    22,    22
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     2,     5,    10,     5,     6,     4,     5
+       0,     2,     2,     5,    10,     0,     1,     2,     5,     0,
+       1,     2,     4,     5
 };
 
 
@@ -1189,10 +1195,10 @@ yyreduce:
         printf("Entity declaration: %s\n", (yyvsp[-3].id));
         free((yyvsp[-3].id));
     }
-#line 1193 "y.tab.c"
+#line 1199 "y.tab.c"
     break;
 
-  case 4: /* architecture_decl: ARCHITECTURE IDENTIFIER OF IDENTIFIER IS signal_decl BEGIN_TOK assignment END SEMICOLON  */
+  case 4: /* architecture_decl: ARCHITECTURE IDENTIFIER OF IDENTIFIER IS signal_decl_list BEGIN_TOK assignment_list END SEMICOLON  */
 #line 56 "assignment.y"
     {
         if (entity_name == NULL) 
@@ -1214,21 +1220,10 @@ yyreduce:
         free((yyvsp[-8].id));
         free((yyvsp[-6].id));
     }
-#line 1218 "y.tab.c"
+#line 1224 "y.tab.c"
     break;
 
-  case 5: /* signal_decl: SIGNAL IDENTIFIER COLON IDENTIFIER SEMICOLON  */
-#line 80 "assignment.y"
-    {
-        add_signal((yyvsp[-3].id), (yyvsp[-1].id));
-        printf("Signal declaration: %s of type %s\n", (yyvsp[-3].id), (yyvsp[-1].id));
-        free((yyvsp[-3].id));
-        free((yyvsp[-1].id));
-    }
-#line 1229 "y.tab.c"
-    break;
-
-  case 6: /* signal_decl: signal_decl SIGNAL IDENTIFIER COLON IDENTIFIER SEMICOLON  */
+  case 8: /* signal_decl: SIGNAL IDENTIFIER COLON IDENTIFIER SEMICOLON  */
 #line 87 "assignment.y"
     {
         add_signal((yyvsp[-3].id), (yyvsp[-1].id));
@@ -1236,11 +1231,11 @@ yyreduce:
         free((yyvsp[-3].id));
         free((yyvsp[-1].id));
     }
-#line 1240 "y.tab.c"
+#line 1235 "y.tab.c"
     break;
 
-  case 7: /* assignment: IDENTIFIER ASSIGN IDENTIFIER SEMICOLON  */
-#line 97 "assignment.y"
+  case 12: /* assignment: IDENTIFIER ASSIGN IDENTIFIER SEMICOLON  */
+#line 104 "assignment.y"
     {
         if (!signal_exists((yyvsp[-3].id))) 
         {
@@ -1265,11 +1260,11 @@ yyreduce:
         free((yyvsp[-3].id));
         free((yyvsp[-1].id));
     }
-#line 1269 "y.tab.c"
+#line 1264 "y.tab.c"
     break;
 
-  case 8: /* assignment: assignment IDENTIFIER ASSIGN IDENTIFIER SEMICOLON  */
-#line 122 "assignment.y"
+  case 13: /* assignment: assignment IDENTIFIER ASSIGN IDENTIFIER SEMICOLON  */
+#line 129 "assignment.y"
     {
         if (!signal_exists((yyvsp[-3].id))) 
         {
@@ -1294,11 +1289,11 @@ yyreduce:
         free((yyvsp[-3].id));
         free((yyvsp[-1].id));
     }
-#line 1298 "y.tab.c"
+#line 1293 "y.tab.c"
     break;
 
 
-#line 1302 "y.tab.c"
+#line 1297 "y.tab.c"
 
       default: break;
     }
@@ -1491,7 +1486,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 148 "assignment.y"
+#line 155 "assignment.y"
 
 
 void add_signal(char *name, char *type) 

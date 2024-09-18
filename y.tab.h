@@ -55,11 +55,11 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     ENTITY = 258,                  /* ENTITY  */
-    IS = 259,                      /* IS  */
-    END = 260,                     /* END  */
-    ARCHITECTURE = 261,            /* ARCHITECTURE  */
-    SIGNAL = 262,                  /* SIGNAL  */
-    IDENTIFIER = 263,              /* IDENTIFIER  */
+    IDENTIFIER = 259,              /* IDENTIFIER  */
+    IS = 260,                      /* IS  */
+    END = 261,                     /* END  */
+    ARCHITECTURE = 262,            /* ARCHITECTURE  */
+    SIGNAL = 263,                  /* SIGNAL  */
     NUMBER = 264,                  /* NUMBER  */
     OF = 265,                      /* OF  */
     COLON = 266,                   /* COLON  */
@@ -75,11 +75,11 @@ extern int yydebug;
 #define YYerror 256
 #define YYUNDEF 257
 #define ENTITY 258
-#define IS 259
-#define END 260
-#define ARCHITECTURE 261
-#define SIGNAL 262
-#define IDENTIFIER 263
+#define IDENTIFIER 259
+#define IS 260
+#define END 261
+#define ARCHITECTURE 262
+#define SIGNAL 263
 #define NUMBER 264
 #define OF 265
 #define COLON 266
