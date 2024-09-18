@@ -92,10 +92,9 @@ extern int yydebug;
 union YYSTYPE
 {
 #line 29 "assignment.y"
+ char *id; 
 
-    char *id;
-
-#line 99 "y.tab.h"
+#line 98 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

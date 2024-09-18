@@ -1,4 +1,4 @@
-ENTITY ent IS
+EnTITY ent IS
 END;
 
 ARCHITECTURE arch OF ent IS

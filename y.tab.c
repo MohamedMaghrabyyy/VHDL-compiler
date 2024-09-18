@@ -76,6 +76,7 @@
 
 void yyerror(const char *s);
 extern int yylex();
+extern int yylineno;
 
 #define MAX_SIGNALS 100
 
@@ -93,7 +94,6 @@ void add_signal(char *name, char *type);
 int signal_exists(char *name);
 char* get_signal_type(char *name);
 int signal_type_matches(char *source, char *destination);
-
 
 #line 99 "y.tab.c"
 
@@ -177,10 +177,9 @@ extern int yydebug;
 union YYSTYPE
 {
 #line 29 "assignment.y"
+ char *id; 
 
-    char *id;
-
-#line 184 "y.tab.c"
+#line 183 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -607,7 +606,7 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    41,    41,    45,    57,    71,    78,    88,   106
+       0,    39,    39,    43,    55,    79,    86,    96,   121
 };
 #endif
 
@@ -1181,101 +1180,125 @@ yyreduce:
   switch (yyn)
     {
   case 3: /* entity_decl: ENTITY IDENTIFIER IS END SEMICOLON  */
-#line 46 "assignment.y"
-        {
-            if (entity_name) {
-                free(entity_name);
-            }
-            entity_name = strdup((yyvsp[-3].id));
-            printf("Entity declaration: %s\n", (yyvsp[-3].id));
-            free((yyvsp[-3].id));
+#line 44 "assignment.y"
+    {
+        if (entity_name) {
+            free(entity_name);
         }
-#line 1194 "y.tab.c"
+        entity_name = strdup((yyvsp[-3].id));
+        printf("Entity declaration: %s\n", (yyvsp[-3].id));
+        free((yyvsp[-3].id));
+    }
+#line 1193 "y.tab.c"
     break;
 
   case 4: /* architecture_decl: ARCHITECTURE IDENTIFIER OF IDENTIFIER IS signal_decl BEGIN_TOK assignment END SEMICOLON  */
-#line 58 "assignment.y"
+#line 56 "assignment.y"
+    {
+        if (entity_name == NULL) 
         {
-            if (strcasecmp(entity_name, (yyvsp[-6].id)) != 0) {
-                yyerror("Entity name in architecture does not match entity declaration.");
-                exit(EXIT_FAILURE);
-            }
-            printf("Architecture declaration: %s for entity: %s\n", (yyvsp[-8].id), (yyvsp[-6].id));
-            free((yyvsp[-8].id));
-            free((yyvsp[-6].id));
-            exit(EXIT_SUCCESS);
+            yyerror("No entity declared.");
         }
-#line 1209 "y.tab.c"
+        else if (strcasecmp(entity_name, (yyvsp[-6].id)) != 0) 
+        {
+            char error_msg[256];
+            snprintf(error_msg, sizeof(error_msg), 
+                     "Entity name in architecture '%s' does not match declared entity '%s'.",
+                     (yyvsp[-6].id), entity_name);
+            yyerror(error_msg);
+        }
+        else 
+        {
+            printf("Architecture declaration: %s for entity: %s\n", (yyvsp[-8].id), (yyvsp[-6].id));
+        }
+        free((yyvsp[-8].id));
+        free((yyvsp[-6].id));
+    }
+#line 1218 "y.tab.c"
     break;
 
   case 5: /* signal_decl: SIGNAL IDENTIFIER COLON IDENTIFIER SEMICOLON  */
-#line 72 "assignment.y"
-        {
-            add_signal((yyvsp[-3].id), (yyvsp[-1].id));
-            printf("Signal declaration: %s of type %s\n", (yyvsp[-3].id), (yyvsp[-1].id));
-            free((yyvsp[-3].id));
-            free((yyvsp[-1].id));
-        }
-#line 1220 "y.tab.c"
+#line 80 "assignment.y"
+    {
+        add_signal((yyvsp[-3].id), (yyvsp[-1].id));
+        printf("Signal declaration: %s of type %s\n", (yyvsp[-3].id), (yyvsp[-1].id));
+        free((yyvsp[-3].id));
+        free((yyvsp[-1].id));
+    }
+#line 1229 "y.tab.c"
     break;
 
   case 6: /* signal_decl: signal_decl SIGNAL IDENTIFIER COLON IDENTIFIER SEMICOLON  */
-#line 79 "assignment.y"
-        {
-            add_signal((yyvsp[-3].id), (yyvsp[-1].id));
-            printf("Signal declaration: %s of type %s\n", (yyvsp[-3].id), (yyvsp[-1].id));
-            free((yyvsp[-3].id));
-            free((yyvsp[-1].id));
-        }
-#line 1231 "y.tab.c"
+#line 87 "assignment.y"
+    {
+        add_signal((yyvsp[-3].id), (yyvsp[-1].id));
+        printf("Signal declaration: %s of type %s\n", (yyvsp[-3].id), (yyvsp[-1].id));
+        free((yyvsp[-3].id));
+        free((yyvsp[-1].id));
+    }
+#line 1240 "y.tab.c"
     break;
 
   case 7: /* assignment: IDENTIFIER ASSIGN IDENTIFIER SEMICOLON  */
-#line 89 "assignment.y"
+#line 97 "assignment.y"
+    {
+        if (!signal_exists((yyvsp[-3].id))) 
         {
-            if (!signal_exists((yyvsp[-3].id))) {
-                yyerror("Source signal does not exist.");
-                exit(EXIT_FAILURE);
-            }
-            if (!signal_exists((yyvsp[-1].id))) {
-                yyerror("Destination signal does not exist.");
-                exit(EXIT_FAILURE);
-            }
-            if (!signal_type_matches((yyvsp[-3].id), (yyvsp[-1].id))) {
-                yyerror("Signal types do not match.");
-                exit(EXIT_FAILURE);
-            }
-            printf("Assignment: %s <= %s\n", (yyvsp[-3].id), (yyvsp[-1].id));
-            free((yyvsp[-3].id));
-            free((yyvsp[-1].id));
+            char error_msg[100];
+            snprintf(error_msg, sizeof(error_msg), "Unknown signal '%s'", (yyvsp[-3].id));
+            yyerror(error_msg);
         }
-#line 1253 "y.tab.c"
+        if (!signal_exists((yyvsp[-1].id))) 
+        {
+            char error_msg[100];
+            snprintf(error_msg, sizeof(error_msg), "Unknown signal '%s'", (yyvsp[-1].id));
+            yyerror(error_msg);
+        }
+        if (!signal_type_matches((yyvsp[-3].id), (yyvsp[-1].id))) 
+        {
+            yyerror("Signal types don't match.");
+        }
+        else 
+        {
+            printf("Assignment: %s <= %s\n", (yyvsp[-3].id), (yyvsp[-1].id));
+        }
+        free((yyvsp[-3].id));
+        free((yyvsp[-1].id));
+    }
+#line 1269 "y.tab.c"
     break;
 
   case 8: /* assignment: assignment IDENTIFIER ASSIGN IDENTIFIER SEMICOLON  */
-#line 107 "assignment.y"
+#line 122 "assignment.y"
+    {
+        if (!signal_exists((yyvsp[-3].id))) 
         {
-            if (!signal_exists((yyvsp[-3].id))) {
-                yyerror("Source signal does not exist.");
-                exit(EXIT_FAILURE);
-            }
-            if (!signal_exists((yyvsp[-1].id))) {
-                yyerror("Destination signal does not exist.");
-                exit(EXIT_FAILURE);
-            }
-            if (!signal_type_matches((yyvsp[-3].id), (yyvsp[-1].id))) {
-                yyerror("Signal types do not match.");
-                exit(EXIT_FAILURE);
-            }
-            printf("Assignment: %s <= %s\n", (yyvsp[-3].id), (yyvsp[-1].id));
-            free((yyvsp[-3].id));
-            free((yyvsp[-1].id));
+            char error_msg[100];
+            snprintf(error_msg, sizeof(error_msg), "Unknown signal '%s'", (yyvsp[-3].id));
+            yyerror(error_msg);
         }
-#line 1275 "y.tab.c"
+        if (!signal_exists((yyvsp[-1].id))) 
+        {
+            char error_msg[100];
+            snprintf(error_msg, sizeof(error_msg), "Unknown signal '%s'", (yyvsp[-1].id));
+            yyerror(error_msg);
+        }
+        if (!signal_type_matches((yyvsp[-3].id), (yyvsp[-1].id))) 
+        {
+            yyerror("Signal types don't match.");
+        }
+        else 
+        {
+            printf("Assignment: %s <= %s\n", (yyvsp[-3].id), (yyvsp[-1].id));
+        }
+        free((yyvsp[-3].id));
+        free((yyvsp[-1].id));
+    }
+#line 1298 "y.tab.c"
     break;
 
 
-#line 1279 "y.tab.c"
+#line 1302 "y.tab.c"
 
       default: break;
     }
@@ -1468,13 +1491,18 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 126 "assignment.y"
+#line 148 "assignment.y"
 
 
-void add_signal(char *name, char *type) {
-    for (int i = 0; i < signal_count; i++) {
-        if (strcmp(signals[i].name, name) == 0) {
-            yyerror("Signal re-declaration.");
+void add_signal(char *name, char *type) 
+{
+    for (int i = 0; i < signal_count; i++) 
+    {
+        if (strcmp(signals[i].name, name) == 0) 
+        {
+            char error_msg[100];
+            snprintf(error_msg, sizeof(error_msg), "Redeclaration of signal '%s'", name);
+            yyerror(error_msg);
             exit(EXIT_FAILURE);
         }
     }
@@ -1483,37 +1511,43 @@ void add_signal(char *name, char *type) {
     signal_count++;
 }
 
-int signal_exists(char *name) {
-    for (int i = 0; i < signal_count; i++) {
-        if (strcmp(signals[i].name, name) == 0) {
-            return 1;
-        }
+int signal_exists(char *name) 
+{
+    for (int i = 0; i < signal_count; i++) 
+    {
+        if (strcmp(signals[i].name, name) == 0) 
+            return 1;  
     }
     return 0;
 }
 
-char* get_signal_type(char *name) {
-    for (int i = 0; i < signal_count; i++) {
-        if (strcmp(signals[i].name, name) == 0) {
+char* get_signal_type(char *name) 
+{
+    for (int i = 0; i < signal_count; i++) 
+    {
+        if (strcmp(signals[i].name, name) == 0)
             return signals[i].type;
-        }
     }
     return NULL;
 }
 
-int signal_type_matches(char *source, char *destination) {
+int signal_type_matches(char *source, char *destination) 
+{
     char *source_type = get_signal_type(source);
     char *destination_type = get_signal_type(destination);
 
-    if (source_type == NULL) {
+    if (source_type == NULL) 
+    {
         fprintf(stderr, "Error: Source signal '%s' type not found.\n", source);
         return 0;
     }
-    if (destination_type == NULL) {
+    if (destination_type == NULL) 
+    {
         fprintf(stderr, "Error: Destination signal '%s' type not found.\n", destination);
         return 0;
     }
-    if (strcmp(source_type, destination_type) != 0) {
+    if (strcmp(source_type, destination_type) != 0) 
+    {
         fprintf(stderr, "Error: Type mismatch: signal '%s' is of type '%s', but assignment is to '%s' of type '%s'\n",
                 source, source_type, destination, destination_type);
         return 0;
@@ -1521,11 +1555,12 @@ int signal_type_matches(char *source, char *destination) {
     return 1;
 }
 
-int main() {
+int main() 
+{
     return yyparse();
 }
 
-void yyerror(const char *s) {
+void yyerror(const char *s) 
+{
     fprintf(stderr, "Error: %s\n", s);
 }
-

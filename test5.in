@@ -6,4 +6,4 @@ signal s12 : t1;
 signal s2 : t2;
 begin
 s11 <= s12;
-END;
+end;

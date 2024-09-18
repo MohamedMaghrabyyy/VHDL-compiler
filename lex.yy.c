@@ -470,11 +470,17 @@ char *yytext;
 #line 2 "assignment.l"
 #include "y.tab.h"
 #include <ctype.h>
+#include <string.h>
 
 void yyerror(const char *s);
 int yylineno;  // To track the current line number in Flex
-#line 477 "lex.yy.c"
-#line 478 "lex.yy.c"
+
+// Convert a string to lowercase
+void to_lowercase(char *str) {
+    for (char *p = str; *p; ++p) *p = tolower(*p);
+}
+#line 483 "lex.yy.c"
+#line 484 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -691,10 +697,10 @@ YY_DECL
 		}
 
 	{
-#line 9 "assignment.l"
+#line 15 "assignment.l"
 
 
-#line 698 "lex.yy.c"
+#line 704 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -753,76 +759,118 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 11 "assignment.l"
+#line 17 "assignment.l"
 { yylval.id = strdup("entity"); return ENTITY; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 12 "assignment.l"
+#line 18 "assignment.l"
 { yylval.id = strdup("is"); return IS; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 13 "assignment.l"
+#line 19 "assignment.l"
 { yylval.id = strdup("end"); return END; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 14 "assignment.l"
+#line 20 "assignment.l"
 { yylval.id = strdup("architecture"); return ARCHITECTURE; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 15 "assignment.l"
+#line 21 "assignment.l"
 { yylval.id = strdup("signal"); return SIGNAL; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 16 "assignment.l"
+#line 22 "assignment.l"
 { yylval.id = strdup("of"); return OF; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 17 "assignment.l"
+#line 23 "assignment.l"
 { yylval.id = strdup("begin"); return BEGIN_TOK; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 19 "assignment.l"
-{ yylval.id = strdup(yytext); return IDENTIFIER; }
+#line 25 "assignment.l"
+{
+    char temp[256];
+    // Copy the identifier and convert to lowercase
+    strncpy(temp, yytext, sizeof(temp));
+    temp[sizeof(temp) - 1] = '\0';  // Ensure null termination
+    char *original_text = strdup(yytext);
+    to_lowercase(temp);
+    // Check if it's a keyword by comparing with lowercase keywords
+    if (strcmp(temp, "entity") == 0) {
+        yylval.id = original_text;
+        return ENTITY;
+    }
+    if (strcmp(temp, "is") == 0) {
+        yylval.id = original_text;
+        return IS;
+    }
+    if (strcmp(temp, "end") == 0) {
+        yylval.id = original_text;
+        return END;
+    }
+    if (strcmp(temp, "architecture") == 0) {
+        yylval.id = original_text;
+        return ARCHITECTURE;
+    }
+    if (strcmp(temp, "signal") == 0) {
+        yylval.id = original_text;
+        return SIGNAL;
+    }
+    if (strcmp(temp, "of") == 0) {
+        yylval.id = original_text;
+        return OF;
+    }
+    if (strcmp(temp, "begin") == 0) {
+        yylval.id = original_text;
+        return BEGIN_TOK;
+    }
+    yylval.id = original_text;
+    return IDENTIFIER;
+}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 21 "assignment.l"
+#line 65 "assignment.l"
 { /* Ignore whitespace */ }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 22 "assignment.l"
+#line 66 "assignment.l"
 { return ASSIGN; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 23 "assignment.l"
+#line 67 "assignment.l"
 { return SEMICOLON; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 24 "assignment.l"
+#line 68 "assignment.l"
 { return COLON; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 26 "assignment.l"
-{ yyerror("unexpected character"); }
+#line 70 "assignment.l"
+{ 
+    char error_msg[100];
+    snprintf(error_msg, sizeof(error_msg), "unexpected character '%s'", yytext);
+    yyerror(error_msg);
+}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 28 "assignment.l"
+#line 76 "assignment.l"
 ECHO;
 	YY_BREAK
-#line 826 "lex.yy.c"
+#line 874 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1827,11 +1875,10 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 28 "assignment.l"
+#line 76 "assignment.l"
 
 
 int yywrap(void) {
     return 1;
 }
-
 

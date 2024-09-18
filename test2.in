@@ -1,6 +1,6 @@
-ENTITY abc IS
-END;
+entity abc is
+end;
 
-ARCHITECTURE arch OF xyz IS
-BEGIN
-END;
+architecture arch of xyz is
+begin
+end;
